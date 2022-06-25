@@ -28,18 +28,36 @@ class PinjamanController extends Controller
         {
             $data=DB::table('Kopkarsbi.dbo.Cicilan_koperasi')
             ->where('nik',$request->nik)
-                ->get(['Bulan','Cicilan_pokok','Cicilan_bunga','Cicilan_total','Remarks']);
+                ->get(['Bulan','Cicilan_pokok','Cicilan_bunga','Cicilan_total','remarks']);
+
+            $total=DB::table('Kopkarsbi.dbo.Cicilan_koperasi')
+            ->where('nik',$request->nik)
+                ->get( array(
+                    DB::raw('count(Bulan) as Bulan'),
+                    DB::raw('sum(Cicilan_pokok) as Cicilan_pokok'),
+                    DB::raw('sum(Cicilan_bunga) as Cicilan_bunga'),
+                    DB::raw('sum(Cicilan_total) as Cicilan_total'),
+                ));
         }else{
             $data=DB::table('Kopkarsbi.dbo.Kredit_Konsumtif')
             ->where('nik',$request->nik)
-            ->where('kode',$request->code)
-                ->get(['Bulan','Cicilan as Cicilan_pokok','Bunga as Cicilan_bunga','kredit_Kendaraan as Cicilan_total','Remarks']);
+                ->get(['Bulan','Cicilan','Bunga','kredit_Kendaraan','Kredit_PRT','Kode']);
+
+            $total=DB::table('Kopkarsbi.dbo.Kredit_Konsumtif')
+            ->where('nik',$request->nik)
+                    ->get( array(
+                        DB::raw('count(Bulan) as Bulan'),
+                        DB::raw('sum(Cicilan) as Cicilan_pokok'),
+                        DB::raw('sum(Bunga) as Cicilan_bunga'),
+                        DB::raw('sum(kredit_Kendaraan) as Cicilan_total'),
+                        DB::raw('sum(Kredit_PRT) as Kredit_PRT'),
+                    ));     
         }
        
-
         return response()->json([
             'status' => true,
-            'data' => $data
+            'data' => $data,
+            'total'=>$total
         ]);
     }
 }
