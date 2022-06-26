@@ -46,24 +46,30 @@ class SimpananController extends Controller
             ));
     }
 
-    public function SendMailpinjaman(Request $req)
+    public function GetName($nik)
+    {
+        return DB::table('Kopkarsbi.dbo.Koperasi')->where('nik',$nik)->pluck('Nama')->first();
+    }
+
+    public function SendmailSimpanan(Request $req)
     {
 
-        $nik=$req->nik;
-
-        
+      
+        $nik=$req->nik;   
+        $nama=$this->GetName($nik); 
         $simpanan = $this->DataSimpanan($nik);
         $total = $this->TotalSimpanan($nik)->first();
-        $nika['niks']=$simpanan->pluck('NIK')->first();
 
 
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('pdf.pdf_template', $nika,compact('simpanan','total'));
+        $pdf->loadView('pdf.pdf_simpanan', ["nama"=>$nama],compact('simpanan','total'));
 
-        Mail::send('mail.mail_template', $nika, function ($message) use ($nika, $pdf) {
-            $message->to('ahmadun.jambi@gmail.com')
+ 
+
+        Mail::send('mail.mail_simpanan',["nama"=>$nama], function ($message) use ($pdf) {
+                $message->to('ahmadun.jambi@gmail.com')
                 ->subject('Simpanan Koperasi')
-                ->attachData($pdf->output(), "test.pdf");
+                ->attachData($pdf->output(), "SIMPANAN.pdf");
         });
     }
 }

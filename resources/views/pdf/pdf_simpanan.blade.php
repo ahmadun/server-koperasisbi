@@ -21,7 +21,7 @@
     <div style="margin: 25px 0;">
         <div style="width:100%; margin: auto; text-align: center; margin-bottom: 20px; font-weight: bolder;">DATA
             SIMPANAN</div>
-        <p><b>{{$niks}}</b></p>
+        <p><b>{{$nama}}</b></p>
         <table class="styled-table" style="width:100%">
             <thead>
                 <tr style="background-color: cadetblue; height: 40px;">
