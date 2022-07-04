@@ -143,7 +143,7 @@ class AuthController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
-                'email' => 'required|email',
+                'nik' => 'required',
                 'password' => 'required'
             ]);
 
@@ -155,18 +155,20 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            if(!Auth::attempt($request->only(['nik', 'password']))){
                 return response()->json([
-                    'status' => false,
+                    'isAuthenticated' => false,
                     'message' => 'Email & Password does not match with our record.',
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('nik', $request->nik)->first();
 
             return response()->json([
-                'status' => true,
-                'message' => 'User Logged In Successfully',
+                'isAuthenticated' => true,
+                'token_type' => 'Bearer',
+                'nik' => $request->nik,
+                'name' => $user->name,
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
 
@@ -176,5 +178,11 @@ class AuthController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+    
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json(['message' => 'Logged Out'], 200);
     }
 }

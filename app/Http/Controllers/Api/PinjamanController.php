@@ -13,9 +13,10 @@ class PinjamanController extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $data=DB::select('exec spListPinjaman @nik=197088');
+        $nik=$request->nik; 
+        $data=DB::select('exec spListPinjaman @nik='.$nik.'');
 
         return response()->json([
             'status' => true,
