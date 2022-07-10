@@ -27,9 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::post('/auth/register',[AuthController::class,'createUser']);
-Route::post('/auth/updateuser',[AuthController::class,'updateUser'])->middleware('auth:sanctum');
+Route::post('/auth/updateuser',[AuthController::class,'updateUser']);
 Route::post('/auth/updateemail',[AuthController::class,'updateEmailNo'])->middleware('auth:sanctum');
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
 Route::get('/simpanan',[SimpananController::class,'index'])->middleware('auth:sanctum')->middleware('auth:sanctum');
 Route::get('/simpanan/mail',[SimpananController::class,'SendmailSimpanan'])->middleware('auth:sanctum');
 Route::get('/pinjaman',[PinjamanController::class,'index'])->middleware('auth:sanctum')->middleware('auth:sanctum');
@@ -41,3 +42,5 @@ Route::get('/checkkasbon',[KasbonController::class,'index']);
 Route::post('/savetrans',[KasbonController::class,'SaveTransaksi']);
 Route::post('/saveblgkontan',[BelanjaKontanController::class,'SaveTransaksi']);
 Route::post('/uploadsalary',[SalaryController::class,'UploadData']);
+Route::post('/addnew',[SalaryController::class,'ProsesData']);
+Route::get('/datasalary',[SalaryController::class,'index']);

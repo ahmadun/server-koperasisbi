@@ -155,11 +155,12 @@ class AuthController extends Controller
                 ], 401);
             }
 
+
             if(!Auth::attempt($request->only(['nik', 'password']))){
                 return response()->json([
                     'isAuthenticated' => false,
                     'message' => 'Email & Password does not match with our record.',
-                ], 401);
+                ]);
             }
 
             $user = User::where('nik', $request->nik)->first();
@@ -170,7 +171,7 @@ class AuthController extends Controller
                 'nik' => $request->nik,
                 'name' => $user->name,
                 'token' => $user->createToken("API TOKEN")->plainTextToken
-            ], 200);
+            ]);
 
         } catch (\Throwable $th) {
             return response()->json([

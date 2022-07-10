@@ -25,15 +25,18 @@ class KasbonController extends Controller
     {
         $data=$request->all();
         $stage = array();
-        $kasban = array();
+        $kasbon = array();
         $now = Carbon::now('utc')->toDateTimeString();
+        $total=0;
         foreach($data["tableData"] as $value)
         {
+            $total+=$value['price'];
             $date = Carbon::parse($value['date']);
             array_push($stage, array(
                 'nik'=>$value['nik'],
                 'date_bon'=>$date->format('Y-m-d'),
                 'form'=>$value['form'],
+                'nota'=>$value['nota'],
                 'item'=>$value['item'],
                 'qty'=>$value['qty'],
                 'price'=> $value['price'],
@@ -41,24 +44,23 @@ class KasbonController extends Controller
                 'created_at'=>$now
             ));
             
-            if($value['form']==1){
-                array_push($kasban, array(
-                    'nik'=>$value['nik'],
-                    'tgl_Bon'=>$date->format('Y-m-d'),
-                    'no_nota'=>$value['item'],
-                    'jumlah_bon'=>$value['price'],
-                    'User_ID'=>$value['user'],
-                    'Entry_dt'=> $now,
-                    'Modify_dt'=>$now
-                )); 
-            }        
         };
 
+        $kasbon=array(
+            'nik'=>$stage[0]['nik'],
+            'tgl_Bon'=>$date->format('Y-m-d'),
+            'no_nota'=>$stage[0]['nota'],
+            'jumlah_bon'=>$total,
+            'User_ID'=> $stage[0]["created_by"],
+            'Entry_dt'=> $now,
+            'Modify_dt'=>$now
+        ); 
+       
         DB::beginTransaction();
         try 
         {
-            $one=DB::table('kasbon')->insert($stage);
-            $two=DB::table('Kopkarsbi.dbo.All_Kasbon')->insert($kasban);
+            $one=DB::table('kasbons')->insert($stage);
+            $two=DB::table('Kopkarsbi.dbo.All_Kasbon')->insert($kasbon);
 
             if($one || $two){
                 DB::commit();

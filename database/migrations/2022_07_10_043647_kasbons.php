@@ -13,13 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('salary', function (Blueprint $table) {
-            $table->char('nik', 6)->unique();
-            $table->integer('basic_salary');
-            $table->integer('last_salary');
-            $table->char('last_month_pay',6);
+        Schema::create('kasbons', function (Blueprint $table) {
+            $table->id();
+            $table->char('nik', 6);
+            $table->date('date_bon');
+            $table->char('form',1);
+            $table->char('nota',10);
+            $table->string('item');
+            $table->integer('qty');
+            $table->integer('price');
             $table->string('created_by',15);
-            $table->string('updated_by',15);
+            $table->string('updated_by',15)->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('salary');
+        Schema::dropIfExists('kasbons');
     }
 };
