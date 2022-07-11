@@ -54,22 +54,38 @@ class SimpananController extends Controller
     public function SendmailSimpanan(Request $req)
     {
 
+        try
+        
+        {
+
+            $nik=$req->nik;   
+            $nama=$this->GetName($nik); 
+            $simpanan = $this->DataSimpanan($nik);
+            $total = $this->TotalSimpanan($nik)->first();
+    
+    
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('pdf.pdf_simpanan', ["nama"=>$nama],compact('simpanan','total'));
+    
+     
+    
+            Mail::send('mail.mail_simpanan',["nama"=>$nama], function ($message) use ($pdf) {
+                    $message->to('ahmadun.jambi@gmail.com')
+                    ->subject('Simpanan Koperasi')
+                    ->attachData($pdf->output(), "SIMPANAN.pdf");
+            });
+
+            return response()->json([
+                'status' => true,
+            ]);
+
+        }catch(\Throwable $th){
+            return response()->json([
+                'status' => false,
+            ]);
+
+        }
       
-        $nik=$req->nik;   
-        $nama=$this->GetName($nik); 
-        $simpanan = $this->DataSimpanan($nik);
-        $total = $this->TotalSimpanan($nik)->first();
-
-
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('pdf.pdf_simpanan', ["nama"=>$nama],compact('simpanan','total'));
-
- 
-
-        Mail::send('mail.mail_simpanan',["nama"=>$nama], function ($message) use ($pdf) {
-                $message->to('ahmadun.jambi@gmail.com')
-                ->subject('Simpanan Koperasi')
-                ->attachData($pdf->output(), "SIMPANAN.pdf");
-        });
+      
     }
 }
