@@ -12,8 +12,6 @@ class SalaryController extends Controller
 
     public function index(Request $req)
     {
-
-
         return response()->json([
             'status' => true,
             'data' => $this->DataSalary($req->nik)
@@ -112,8 +110,6 @@ class SalaryController extends Controller
         };
 
         DB::table('salarys')->insert($stage);
-
-
         return response()->json([
             'status' => true,
             'data' => $this->DataSalary(null)

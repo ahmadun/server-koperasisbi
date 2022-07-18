@@ -66,8 +66,7 @@ class SimpananController extends Controller
     
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('pdf.pdf_simpanan', ["nama"=>$nama],compact('simpanan','total'));
-    
-     
+  
     
             Mail::send('mail.mail_simpanan',["nama"=>$nama], function ($message) use ($pdf) {
                     $message->to('ahmadun.jambi@gmail.com')

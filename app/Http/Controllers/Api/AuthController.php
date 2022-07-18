@@ -37,10 +37,12 @@ class AuthController extends Controller
 
             $user = User::create([
                 'nik' => $request->nik,
+                'role' => $request->rule,
                 'no_hp' => $request->no_hp,
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
+                'role'=>$request->role
             ]);
 
             return response()->json([
@@ -60,6 +62,7 @@ class AuthController extends Controller
     public function updateUser(Request $request)
     {
         try {
+
             $validateUser = Validator::make($request->all(), 
             [
                 'no_hp' => 'required',
@@ -85,13 +88,13 @@ class AuthController extends Controller
             return response()->json([
                 'status' =>  true,
                 'message' => 'User Updated Successfully'
-            ], 200);
+            ]);
 
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
-            ], 500);
+            ]);
         }
     }
 
@@ -117,6 +120,7 @@ class AuthController extends Controller
            User::where('nik', $request->nik)
                 ->update([
                     'no_hp' => $request->no_hp,
+                    'role' => $request->rule,
                     'email' => $request->email,
                 ]);
 
@@ -165,12 +169,15 @@ class AuthController extends Controller
 
             $user = User::where('nik', $request->nik)->first();
 
+     
+
             return response()->json([
                 'isAuthenticated' => true,
                 'token_type' => 'Bearer',
                 'nik' => $request->nik,
                 'name' => $user->name,
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => $user->createToken("API TOKEN")->plainTextToken,
+                'role'=> $user->role
             ]);
 
         } catch (\Throwable $th) {

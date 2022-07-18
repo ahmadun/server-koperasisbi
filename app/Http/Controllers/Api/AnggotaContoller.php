@@ -18,7 +18,7 @@ class AnggotaContoller extends Controller
     {
         $nik=$req->nik;
         $data=$this->GetName($nik);
-        $user=DB::table('users')->where('nik',$nik)->get(['no_hp','email','email']);
+        $user=DB::table('users')->where('nik',$nik)->get(['role','no_hp','email','email']);
 
         return response()->json([
             'status' => true,
